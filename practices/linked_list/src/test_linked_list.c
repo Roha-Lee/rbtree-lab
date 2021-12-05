@@ -3,19 +3,24 @@
 
 int main(int argc, char *argv[]) {
     linkedlist *p = generate_linkedlist();
-    insert(p, 0, 10);
-    insert(p, 1, 11);
+    prepend(p, 1);
+    prepend(p, 3);
+    append(p, 4);
+    append(p, 3);
+    append(p, 7);
     print_linked_list(p);
-    // printf("num_elements: %d\n", count_elements(p));
-    
-    insert(p, 0, 9);
-    insert(p, 1, 8);
+    pop(p);
+    pop_first(p);
     print_linked_list(p);
-    // printf("num_elements: %d\n", count_elements(p));
-    // node * node1 = find(p, 9);
-    // node * node2 = find(p, 12);
-    // printf("%s", node1);
-    // printf("%s", node2);
+    pop(p);
+    pop_first(p);
+    print_linked_list(p);
+    pop(p);
+    pop_first(p);
+    print_linked_list(p);
+    pop(p);
+    pop_first(p);
+    print_linked_list(p);
     
     delete_linkedlist(p);
 }
