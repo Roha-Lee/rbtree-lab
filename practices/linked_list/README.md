@@ -3,29 +3,43 @@
 
 # 구조체 정의
 ## node
-- int val: 노드에 저장될 자료 
-- struct node *next: 다음 노드를 가리킬 노드 포인터
+- `int val`: 노드에 저장될 자료 
+- `struct node *next`: 다음 노드를 가리킬 노드 포인터
 ## linkedlist
-- node *head: 연결리스트의 맨 앞을 가리키는 포인터 
-- node *tail: 연결리스트의 맨 뒤를 가리키는 포인터 
+- `node *head`: 연결리스트의 맨 앞을 가리키는 포인터 
+- `node *tail`: 연결리스트의 맨 뒤를 가리키는 포인터 
 
 # 기능 체크리스트 
 ## 리스트 생성, 삭제
-- [ ] `generate_linkedlist()`: 연결리스트 생성
+- [x] `generate_linkedlist()`: 연결리스트 생성
     - 동적 할당하고 각 노드 포인터 NULL로 초기화
-- [ ] `delete_linkedlist(linkedlist *p)`: 연결리스트 p 삭제
+- [x] `delete_linkedlist(linkedlist *p)`: 연결리스트 p 삭제
     - 재귀함수를 이용해서 끝에서 부터 메모리 해제
     - 모든 노드를 제거한 후 연결 리스트 삭제
 
 ## 리스트 코어 기능 
-- [ ] `prepend(value)`: 앞쪽에 노드 추가 
-- [ ] `append(value)`: 뒤쪽에 노드 추가 
-- [ ] `pop()`: 뒤쪽에서 노드 제거 
-- [ ] `popFirst()`: 앞쪽에서 노드 제거 
-- [ ] `head()`: 맨 앞쪽 노드를 반환 
-- [ ] `tail()`: 맨 뒤쪽 노드를 반환 
-- [ ] `remove(Node)`: Node를 리스트로부터 제거 
+- [x] `prepend(value)`: 앞쪽에 노드 추가 
+    - 빈 연결리스트일때와 아닐때로 나누어서 구현 
+- [x] `append(value)`: 뒤쪽에 노드 추가 
+    - 빈 연결리스트일때와 아닐때로 나누어서 구현 
+- [x] `pop()`: 뒤쪽에서 노드 제거
+    - `remove(Node)`를 이용하여 구현
+- [x] `popFirst()`: 앞쪽에서 노드 제거
+    - `remove(Node)`를 이용하여 구현
+- [x] `head()`: 맨 앞쪽 노드를 반환 
+    - 연결리스트가 head를 저장하고 있으므로 바로 반환
+- [x] `tail()`: 맨 뒤쪽 노드를 반환 
+    - 연결리스트가 tail을 저장하고 있으므로 바로 반환   
+- [x] `remove(Node)`: Node를 리스트로부터 제거 
+    - 지우려는 노드가 맨 마지막일때
+        - 중간일때와 동일한데 tail을 바꿔주는 부분 추가
+    - 지우려는 노드가 맨 처음일때 
+        - 연결리스트의 원소가 1개 있을때: head, tail을 모두 NULL로 만들어준 후 메모리 해제
+        - 연결리스트의 원소가 2개 이상일때: head를 바꿔주고 메모리 해제 
+    - 지우려는 노드가 중간일때: 지우려는 노드 이전 노드를 찾아서 지우려는 노드의 다음 노드와 연결해 준 다음 메모리 해제 
+    - 지우려는 노드가 없을때: 그냥 지나간다. 
+        
 
 ## 유틸
-- [ ] `print_linked_list(linkedlist *)`: 연결리스트의 데이터 출력
+- [x] `print_linked_list(linkedlist *)`: 연결리스트의 데이터 출력
     - 빈 
