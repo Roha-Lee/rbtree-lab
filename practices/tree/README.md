@@ -20,7 +20,9 @@
 - [x] `binary_search_tree * create_bst(void)`
     - 트리 생성하기
         - bst 동적 메모리 할당 및 반환
-- [ ] 트리 삭제하기(메모리 해제):
+- [x] 트리 삭제하기(메모리 해제):
+    - 트리의 메모리를 해제하기 전에 트리의 노드들의 메모리를 해제해 주어야 한다. 
+    - DFS를 이용하여 자식 노드부터 순차적으로 메모리를 해제한 이후 트리의 메모리를 해제해 주었다. 
 ### 코어 기능 
 - [x] `void bst_insert_node(bst * tree, int key)`
     - 노드 삽입하기
@@ -30,14 +32,30 @@
             2-1. `key`값이 현재 노드보다 작은 경우는 왼쪽 서브트리로 이동, 만약 현재 노드의 왼쪽 자식이 없다면 새 노드를 왼쪽 자식으로 만들어줌 
             2-2. `key`값이 현재 노드보다 큰 경우에는 오른쪽 서브트리로 이동, 만약 현재 노드의 오른쪽 자식이 없다면 새 노드를 오른쪽 자식으로 만들어줌
             2-3. `key`와 `node->key`가 같은 경우는 이진 탐색트리 특징 4번 **"중복되는 키를 허용하지 않는다"** 에 위배되므로 에러 메시지 출력
-- [ ] 노드 삭제하기 
-- [x] `int bst_find_max(bst * tree)`
+- [x] `bst_remove_node(bst *tree, int key)` 
+    - 노드 삭제하기 
+        - [x] case1. 자식이 없는 노드 삭제 
+            - 루트인 경우: 지우려는 노드를 삭제하고 `tree->root`를 `NULL`로 만들어 준다.  
+            - 아닌 경우: 지우려는 노드를 삭제한다. 
+        - [x] case2. 자식이 하나만 있는 노드 삭제 
+            - 자식이 왼쪽에 있는 경우와 오른쪽에 있는 경우로 나누어서 구현하였다. 
+            - 루트인 경우: `tree->root`를 루트의 자식노드로 바꿔주고 지우려는 노드 메모리 해제  
+            - 아닌 경우: 현재 노드가 이전 노드의 왼쪽인지 오른쪽인지 나누어서 이전 노드의 왼쪽 또는 오른쪽 노드에 현재 노드의 자식을 넣어주고 현재 노드의 메모리를 해제한다. 
+        - [x] case3. 자식이 둘 다 있는 노드 삭제 
+            - 지우려는 노드 다음으로 큰 노드를 찾아서 지우려는 노드와 값을 교체한 후 찾은 노드를 제거한다. 
+            - 다음으로 큰 노드를 찾기 위해 오른쪽 자식을 출발점으로 하여 왼쪽 자식이 없을때 까지 계속 순회한다. 이때 아래와 같은 두 가지 경우가 발생한다. 
+            - 지우려는 노드의 오른쪽 자식의 왼쪽 자식이 없는 경우
+                -  이 경우는 지우려는 노드의 자식을 바꾸려는 노드의 자식으로 직접 변경해주었다. 
+            - 지우려는 노드의 오른쪽 자식의 왼쪽 자식이 있는 경우 
+                - 위 방식대로 왼쪽 끝까지 찾아간 후 찾은 노드와 값을 교체한다. 교체하고 난 다음에는 찾은 노드를 지워주면 되는데 찾은 노드는 case1, case2중 하나가 되기 때문에 위에서 작성한 코드를 이용하기 위해 재귀로 함수를 한번 더 불러서 제거해준다. 
+
+- [x] `int bst_find_max(bst *tree)`
     - 트리의 최대값 찾기 
         - 트리의 오른쪽 자식으로만 이동, 가장 우측의 키 값을 반환
-- [x] `int bst_find_min(bst * tree)`
+- [x] `int bst_find_min(bst *tree)`
     - 트리의 최대값 찾기 
         - 트리의 왼쪽 자식으로만 이동, 가장 좌측의 키 값을 반환
-- [x] `bool bst_find_node(bst *, int key)`
+- [x] `bool bst_find_node(bst *tree, int key)`
     - 노드 검색하기 
         - 노드 삽입할때의 로직과 동일하게 수행
         - Tree가 비어있는 경우 `false`
@@ -63,37 +81,14 @@
         ```
 # 기능 테스트 📜
 - [x] 트리 생성 & 노드 삽입 & 트리 출력 테스트 
-    ```c
-    // 빈 트리 출력 테스트 
-    bst *tree = create_bst();
-    bst_print(tree);
-    // 트리 생성 및 출력 테스트 
-    int tree_elems[10] = {3, 5, 1, 2, 0, 4, 6, 9, 7, 10};
-    for(int i = 0; i < 10; i++){
-        bst_insert_node(tree, tree_elems[i]);
-    }
-    bst_print(tree);
-    ```
+    - 빈 트리 출력 테스트 
+    - 일반적인 트리 생성 및 출력 테스트 
 - [x] 트리 최대값 & 최소값 & 특정값 찾기 테스트 
-    ```c
-    // 2. 트리 최대값 & 최소값 & 특정값 찾기 테스트 
-    bst *tree = create_bst();
-    int tree_elems[10] = {3, 5, 1, 2, 0, 4, 6, 9, 7, 10};
-    for(int i = 0; i < 10; i++){
-        bst_insert_node(tree, tree_elems[i]);
-    }
-    bst_print(tree);
-    printf("max key of tree: %d\n", bst_find_max(tree));
-    printf("min key of tree: %d\n", bst_find_min(tree));
-    printf("result of find key 8 : %s\n", bst_find_node(tree, 8) ? "true" : "false");
-    printf("result of find key 10 : %s\n", bst_find_node(tree, 10) ? "true" : "false");
+    - 일반적인 트리에서 최대값, 최소값, 특정값 찾기 테스트 
+    - 빈 트리에서 최대값, 최소값, 특정값 찾기 테스트 
+- [x] 노드 삭제 테스트
+    - 케이스별로 테스트케이스를 준비해서 실행 및 결과 확인 
+        - case 1. 자식이 없는 노드 삭제 테스트 
+            - 루트노드를 지우는 경우
+            - 아닌경우 
     
-    // 빈 트리에서 테스트
-    bst *tree2 = create_bst();
-    bst_print(tree2);
-    printf("max key of tree: %d\n", bst_find_max(tree2));
-    printf("min key of tree: %d\n", bst_find_min(tree2));
-    printf("result of find key 8 : %s\n", bst_find_node(tree2, 8) ? "true" : "false");
-    printf("result of find key 10 : %s\n", bst_find_node(tree2, 10) ? "true" : "false");
-    ```
-- [ ] 노드 삭제 테스트

@@ -15,6 +15,7 @@ typedef struct {
 
 // 생성/삭제
 bst * create_bst();
+void remove_bst(bst *);
 
 // 코어기능 
 void bst_insert_node(bst *, int);

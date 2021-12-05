@@ -9,6 +9,31 @@ bst * create_bst(void) {
 }
 
 
+node* _remove_bst(node *curr){
+    if(!curr->left_child && !curr->right_child){
+        printf("memory free: node(%d)\n", curr->key);
+        return curr;
+    }
+    if(curr->left_child){
+        free(_remove_bst(curr->left_child));
+    }
+    if(curr->right_child){
+        free(_remove_bst(curr->right_child));
+    }
+    printf("memory free: node(%d)\n", curr->key);
+    return curr;   
+}
+
+
+void remove_bst(bst *tree){
+    if(tree->root){
+        _remove_bst(tree->root);
+    }
+    printf("memory free: tree\n");
+    free(tree);
+}
+
+
 void bst_insert_node(bst * tree, int key) {
     node * new_node = (node *)calloc(1, sizeof(node));
     new_node->left_child = NULL;
@@ -125,6 +150,83 @@ void _bst_print(node * curr, int tab_count) {
 }
 
 
+void _remove_node(bst *tree, node* prev, node* curr){
+    // case 1. 자식이 없는 경우 
+    if(!curr->left_child && !curr->right_child){
+        if(curr == tree->root){
+            tree->root = NULL;
+        }
+
+        if(prev->left_child == curr){
+            prev->left_child = NULL;
+        }
+        else if(prev->right_child == curr){
+            prev->right_child = NULL;
+        }
+
+        free(curr);
+        return;
+    }
+    // case 2. 자식이 오른쪽만 있는 경우 
+    else if(!curr->left_child){
+        if(curr == tree->root){
+            tree->root = curr->right_child;
+        }
+        else{
+            if(prev->right_child == curr){
+                prev->right_child = curr->right_child;
+            }
+            else if(prev->left_child == curr){
+                prev->left_child = curr->right_child;
+            }
+        }
+        free(curr);
+    }
+    // case 2. 자식이 왼쪽만 있는 경우 
+    else if(!curr->right_child){
+        if(curr == tree->root){
+            tree->root = curr->left_child;
+        }
+        else{
+            if(prev->right_child == curr){
+                prev->right_child = curr->left_child;
+            }
+            else if(prev->left_child == curr){
+                prev->left_child = curr->left_child;
+            }
+        }
+        free(curr);
+    }
+    // case 3. 자식이 모두 있는 경우 
+    else{
+        node * swap_node = curr->right_child;
+        node * swap_prev = curr->right_child;
+        while(swap_node->left_child){
+            swap_prev = swap_node;
+            swap_node = swap_node->left_child;
+        }
+        int temp = swap_node->key;
+        swap_node->key = curr->key;
+        curr->key = temp;
+        // 값을 바꾸었으므로 이제 swap_node를 지우는 문제로 바뀜.
+        // 이 경우는 무조건 case1 또는 case2가 됨. 
+        if(swap_node == swap_prev){
+            if(swap_node == curr->right_child){
+                curr->right_child = swap_node->right_child;
+            }
+            else if (swap_node == curr->left_child){
+                curr->left_child = swap_node->right_child;
+            }
+            free(swap_node);
+        }
+        else{
+            _remove_node(tree, swap_prev, swap_node);
+        }
+        
+    }
+}
+
+
 void bst_remove_node(bst * tree, int key){
     if(!tree->root){
         printf("[Fail] Cannot found key: %d.\n", key);
@@ -152,13 +254,7 @@ void bst_remove_node(bst * tree, int key){
             }
         }
         else {
-            // 위치는 찾았고 삭제만 해주면 됨. 
-            // 트리의 루트인 경우 루트값 변경 해야함. 
-            if(curr == tree->root){
-                break;
-            }
-            // 
-
+            _remove_node(tree, prev, curr);
             return;
         }
     }
