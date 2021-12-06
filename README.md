@@ -24,6 +24,30 @@
 - `black height(x)`란 한 노드 x에서 리프까지의 경로에 있는 모든 흑색 노드의 개수
 ### rotation
 - insert와 delete를 위해 rotation을 사용하며 rotation은 이진 탐색트리의 특성을 보존하는 연산이다. 
+### insertion 
+- 삽입할 노드는 이진 탐색 트리와 유사하게 위치를 찾아 빨강으로 칠한후 삽입한다. 
+- 삽입한 후에 RB tree에 위배된 부분이 있다면 RB_INSERT_FIXUP을 호출해서 RB tree의 특성을 맞춰준다. 
+### insertion fixup
+- 반복문을 통해 위로 올라가면서 RB tree에 위배된 부분을 수정해 나간다. 
+- while 반복 시작 시 유지되는 것
+  a. `new_node`는 빨강
+  b. `new_node->parent`가 루트인 경우 `new_node->parent`는 검정이다. 
+    - 따라서 `new_node->parent`가 빨강인 경우 항상 `new_node->parent->parent`가 존재한다. 
+  c. RB tree의 특징을 위반하는 경우 특징2 또는 특징 4 둘 중 하나만을 위반한다. 또한 특징 4를 위반하는 경우는 `new_node`와 `new_node->parent`가 모두 빨강인 경우이다.
+- 6가지 경우로 나누어서 구현한다. 
+  - 3가지 경우는 `new_node->parent`가 `new_node->parent->parent`의 왼쪽노드인 경우, 나머지 3가지 경우는 `new_node->parent`가 `new_node->parent->parent`의 오른쪽 노드인 경우이다.
+  - 경우 1) `new_node`의 삼촌(부모의 부모의 다른 자식)이 빨강인 경우
+    - 해법) 
+    - `new_node->parent`와 그 삼촌을 검정으로 칠한다. 
+    - `new_node->parent->parent`를 빨강으로 칠한다. 
+    - `new_node = new_node->parent->parent` 로 두고 다음 반복을 수행한다.
+  - 경우 2) new_node의 삼촌 y가 검정이고 new_node가 부모의 오른쪽 자식인 경우 
+  - 경우 3) new_node의 삼촌 y가 검정이고 new_node가 부모의 왼쪽 자식인 경우 
+    - 해법) 
+    - 경우 2에서 `new_node = new_node->parent;`를 한 후 `left_rotate(t, new_node);`를 하면 경우 3으로 변환이 가능하다. 
+    - 경우 3의 경우 `new_node->parent`를 검정으로, `new_node->parent->parent`를 빨강으로 칠한 다음 `right_rotate(t, new_node->parent->parent);`를 수행하면 된다.
+    - TODO) 그림 있으면 좋을거 같다. 
+
 
 ## 구현 
 ### 구조체 정의 
@@ -43,23 +67,40 @@
   - rbtree 멤버 초기화 
     - root를 NULL로 만들어주기 
     - nil에 메모리 할당한 후 BLACK으로 설정, 나머지는 NULL
-    
+- [x] `void delete_rbtree(rbtree *t)` 
+  - RB트리 생성에 사용했던 메모리 회수
+  - `node_t * _delete(node_t * curr)` 보조 함수를 이용하여 재귀적으로 노드 삭제 
+    - 리프노드부터 순차적으로 삭제(왼쪽 오른쪽 자식이 모두 `Tree.nil`인 경우 노드 반환)
+    - 재귀적으로 다음 노드를 호출하면서 `free(_delete(curr->left));`, `free(_delete(curr->right));`와 같이 다음 갈 곳이 있는 노드를 방문하여 먼저 삭제 하고 이후에 반환된 노드를 해제한다. 
 ### 코어 기능 
-- [x] `void right_rotation(rbtree * tree, node_t * x)`
-- [x] `void left_rotation(rbtree * tree, node_t * x)`
-  - 트리 회전 기능 구현 
-  - CLRS를 참고하여 구현하였다. 
-  - 책의 가정과 동일하게 회전하려는 노드의 오른쪽 자식이 있다고 가정하였고 루트의 부모는 `Tree.nil`이라고 가정하였다. 
-  - 세 가지 경우로 나누어서 구현하였고 두 노드의 parent, left, right와 부모 자식과의 관계를 순서에 맞게 잘 연결해주어 구현하였다. 
-    - 회전하려는 노드가 루트인 경우
-    - 회전하려는 노드가 부모의 왼쪽 자식인 경우 
-    - 회전하려는 노드가 부모의 오른쪽 자식인 경우
-
+- [x] `node_t *rbtree_insert(rbtree *t, const key_t key)`
+  - insert를 구현하기 위해 아래와 같은 3가지 보조함수 `_right_rotation`, `_left_rotation`, `_rb_insert_fixup`을 구현하였다. 
+  - 이진 탐색 트리와 동일한 로직으로 key값을 노드와 비교하면서 삽입될 위치를 찾는다. 
+  - 삽입될 위치에 노드를 넣어준다.(빨강으로 넣어준다.)
+  - `_rb_insert_fixup`을 통해 RB 트리 규칙을 지키도록 노드들을 조정해준다. 
+  - [x] `void _right_rotation(rbtree * tree, node_t * x)`
+  - [x] `void _left_rotation(rbtree * tree, node_t * x)`
+    - 트리 회전 기능 구현 
+    - CLRS를 참고하여 구현하였다. 
+    - 책의 가정과 동일하게 회전하려는 노드의 오른쪽 자식이 있다고 가정하였고 루트의 부모는 `Tree.nil`이라고 가정하였다. 
+    - 세 가지 경우로 나누어서 구현하였고 두 노드의 parent, left, right와 부모 자식과의 관계를 순서에 맞게 잘 연결해주어 구현하였다. 
+      - 회전하려는 노드가 루트인 경우
+      - 회전하려는 노드가 부모의 왼쪽 자식인 경우 
+      - 회전하려는 노드가 부모의 오른쪽 자식인 경우
+  - [x] `void _rb_insert_fixup(rbtree *t, node_t *curr)`
+    - 삽입할 노드를 무조건 빨강으로 만들어서 넣어주기 때문에 RB 트리의 규칙을 깰 수 있는 가능성이 있다. 이를 바로잡아주기 위한 보조 함수 
+    - [CLRS를 참고한 구현 방식 링크](#insertion-fixup)
+    
 ## 테스트 
-- [x] 트리 회전 테스트
-  - `test_rbtree.c`파일에 테스트 케이스와 트리 출력 코드를 작성한 후 회전을 제대로 구현했는지 테스트 
+- [x] 트리 회전 테스트 통과
+  - 회전관련한 테스트 케이스는 주어지지 않아서 따로 구현하였다. 
+  - `test_rotate.c`파일에 테스트 케이스와 트리 출력 코드를 작성한 후 회전을 제대로 구현했는지 테스트 
   - 확인한 케이스는 위의 회전 구현에서 고려한 세가지 케이스이고 각각의 경우에 대하여 `left_rotation`, `right_rotation`을 테스트 하여 결과 출력하였다. 
----
+- [x] 생성 삭제 테스트 통과 
+  - `test-rbtree.c`파일의 `test_init`부분 통과 
+- [x] 원소 1개 삽입하는 테스트 통과 
+  - `test-rbtree.c`파일의 `test_insert_single`부분 통과 
+
 # Red-Black Tree 구현
 
 Balanced search tree로 많이 쓰이는 Red-black tree (이하 RB tree)를 C 언어로 구현해 보는 과제입니다.

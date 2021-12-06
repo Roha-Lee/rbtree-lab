@@ -2,47 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void right_rotation(rbtree * tree, node_t * x){
-    node_t * y = x->left;
-    x->left = y->right;
-    if(y->right != tree->nil){
-        y->right->parent = x;
-    }
-    y->parent = x->parent;
-    if(x->parent == tree->nil){
-        tree->root = y;
-    }
-    else if(x == x->parent->left){
-        x->parent->left = y;
-    }
-    else {
-        x->parent->right = y;
-    }
-    y->right = x;
-    x->parent = y;
-}
-
-
-void left_rotation(rbtree * tree, node_t * x){
-    node_t * y = x->right;
-    x->right = y->left;
-    if(y->left != tree->nil){
-        y->left->parent = x;
-    }
-    y->parent = x->parent;
-    if(x->parent == tree->nil){
-        tree->root = y;
-    }
-    else if(x == x->parent->left){
-        x->parent->left = y;
-    }
-    else{
-        x->parent->right = y;
-    }
-    y->left = x;
-    x->parent = y;
-}
-
+void _right_rotation(rbtree * , node_t *);
+void _left_rotation(rbtree * , node_t *);
 
 void _rbtree_print(rbtree * tree, node_t * curr, int tab_count) {
     if(tree->nil == curr){
@@ -127,18 +88,20 @@ void right_rotation_test(){
     printf("original tree\n");
     rbtree_print(t1);
     printf("right_rotation(T, 10) -- 루트 노드인 경우\n");
-    right_rotation(t1, t1->root);
+    _right_rotation(t1, t1->root);
     rbtree_print(t1);
+    delete_rbtree(t1);
 
     rbtree * t2 = make_testcase_rbtree();
     printf("right_rotation(T, 5) -- 회전하려는 노드가 부모의 왼쪽 자식인 경우\n");
-    right_rotation(t2, t2->root->left);
+    _right_rotation(t2, t2->root->left);
     rbtree_print(t2);
-
+    delete_rbtree(t2);
     rbtree * t3 = make_testcase_rbtree();
     printf("right_rotation(T, 15) -- 회전하려는 노드가 부모의 오른쪽 자식인 경우\n");
-    right_rotation(t3, t3->root->right);
+    _right_rotation(t3, t3->root->right);
     rbtree_print(t3);
+    delete_rbtree(t3);
     printf("right rotation 테스트 종료\n");
 }
 
@@ -148,18 +111,19 @@ void left_rotation_test(){
     printf("original tree\n");
     rbtree_print(t1);
     printf("left_rotation(T, 10) -- 루트 노드인 경우\n");
-    left_rotation(t1, t1->root);
+    _left_rotation(t1, t1->root);
     rbtree_print(t1);
-
+    delete_rbtree(t1);
     rbtree *t2 = make_testcase_rbtree();
     printf("left_rotation(T, 5) -- 회전하려는 노드가 부모의 왼쪽 자식인 경우\n");
-    left_rotation(t2, t2->root->left);
+    _left_rotation(t2, t2->root->left);
     rbtree_print(t2);
-
+    delete_rbtree(t2);
     rbtree * t3 = make_testcase_rbtree();
     printf("left_rotation(T, 15) -- 회전하려는 노드가 부모의 오른쪽 자식인 경우\n");
-    left_rotation(t3, t3->root->right);
+    _left_rotation(t3, t3->root->right);
     rbtree_print(t3);
+    delete_rbtree(t3);
     printf("left rotation 테스트 종료\n");
 }
 

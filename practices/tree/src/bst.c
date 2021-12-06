@@ -27,7 +27,7 @@ node* _remove_bst(node *curr){
 
 void remove_bst(bst *tree){
     if(tree->root){
-        _remove_bst(tree->root);
+        free(_remove_bst(tree->root));
     }
     printf("memory free: tree\n");
     free(tree);
