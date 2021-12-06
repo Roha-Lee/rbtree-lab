@@ -2,13 +2,56 @@
 
 #include <stdlib.h>
 
+
+void right_rotation(rbtree * tree, node_t * x){
+    node_t * y = x->left;
+    x->left = y->right;
+    if(y->right != tree->nil){
+        y->right->parent = x;
+    }
+    y->parent = x->parent;
+    if(x->parent == tree->nil){
+        tree->root = y;
+    }
+    else if(x == x->parent->left){
+        x->parent->left = y;
+    }
+    else {
+        x->parent->right = y;
+    }
+    y->right = x;
+    x->parent = y;
+}
+
+
+void left_rotation(rbtree * tree, node_t * x){
+    node_t * y = x->right;
+    x->right = y->left;
+    if(y->left != tree->nil){
+        y->left->parent = x;
+    }
+    y->parent = x->parent;
+    if(x->parent == tree->nil){
+        tree->root = y;
+    }
+    else if(x == x->parent->left){
+        x->parent->left = y;
+    }
+    else{
+        x->parent->right = y;
+    }
+    y->left = x;
+    x->parent = y;
+}
+
+
 rbtree *new_rbtree(void) {
     rbtree *p = (rbtree *)calloc(1, sizeof(rbtree));
     // TODO: initialize struct if needed
     p->root = NULL;
     p->nil = (node_t *)calloc(1, sizeof(node_t));
     p->nil->color = RBTREE_BLACK;
-return p;
+    return p;
 }
 
 void delete_rbtree(rbtree *t) {
