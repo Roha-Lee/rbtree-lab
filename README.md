@@ -1,3 +1,65 @@
+# Red Black Tree 개발 노트 :book:
+:link:[과제 설명으로 바로가기](#red-black-tree-구현)
+![RB tree](https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Red-black_tree_example.svg/500px-Red-black_tree_example.svg.png)
+
+## Red Black tree 개요
+- 이진 검색트리의 일종
+- 각 노드당 색깔을 나타내는 한비트의 추가 메모리공간을 갖음 
+- 근사적으로 균형을 이룬 트리가 된다.
+  - :bulb: 균형을 이룬 트리란 한쪽으로 치우치지 않는 트리를 말한다. 
+- 트리의 각 노드는 color, key, left, right, p의 필드를 갖는다. 
+- 한 노드의 자식 또는 부모가 존재하지 않으면 그에 대응되는 노드의 포인터 필드는 NIL값으로 채워진다.
+- NIL은 리프노드들에 대한 포인터들이고 키를 가지는 정상적인 노드들은 트리의 내부 노드로 간주된다. 
+
+## Red Black tree 특징
+1. 모든 노드는 적색이거나 흑색이다 
+2. 루트는 흑색이다
+3. 모든 리프(NIL)은 흑색이다
+4. 노드가 적색이면 그 노드의 자식은 모두 흑색이다
+5. 각 노드로부터 그 노드의 자손인 리프로 가는 경로들은 모두 같은 수의 흑색 노드를 포함한다
+
+## 구현 하기 전 공부 
+### 개요 
+- `T.nil`은 리프노드를 내부 노드와 동일하게 다루기 위해 사용 
+- `black height(x)`란 한 노드 x에서 리프까지의 경로에 있는 모든 흑색 노드의 개수
+### rotation
+- insert와 delete를 위해 rotation을 사용하며 rotation은 이진 탐색트리의 특성을 보존하는 연산이다. 
+
+## 구현 
+### 구조체 정의 
+#### node_t
+- color: 노드의 색 정보(RBTREE_RED / RBTREE_BLACK)
+- key: key값
+- parent, left, right: 부모, 왼쪽 자식, 오른쪽 자식을 가리키는 포인터 
+
+#### rbtree
+- root: 트리의 루트노드를 가리키는 포인터 
+- nil: 리프노드와 루트노드를 표현하기 위한 보조 값
+
+### 생성/삭제 
+- [x] `rbtree *new_rbtree(void)` 
+  - RB트리 생성 
+  - rbtree 메모리 할당 
+  - rbtree 멤버 초기화 
+    - root를 NULL로 만들어주기 
+    - nil에 메모리 할당한 후 BLACK으로 설정, 나머지는 NULL
+    
+### 코어 기능 
+- [x] `void right_rotation(rbtree * tree, node_t * x)`
+- [x] `void left_rotation(rbtree * tree, node_t * x)`
+  - 트리 회전 기능 구현 
+  - CLRS를 참고하여 구현하였다. 
+  - 책의 가정과 동일하게 회전하려는 노드의 오른쪽 자식이 있다고 가정하였고 루트의 부모는 `Tree.nil`이라고 가정하였다. 
+  - 세 가지 경우로 나누어서 구현하였고 두 노드의 parent, left, right와 부모 자식과의 관계를 순서에 맞게 잘 연결해주어 구현하였다. 
+    - 회전하려는 노드가 루트인 경우
+    - 회전하려는 노드가 부모의 왼쪽 자식인 경우 
+    - 회전하려는 노드가 부모의 오른쪽 자식인 경우
+
+## 테스트 
+- [x] 트리 회전 테스트
+  - `test_rbtree.c`파일에 테스트 케이스와 트리 출력 코드를 작성한 후 회전을 제대로 구현했는지 테스트 
+  - 확인한 케이스는 위의 회전 구현에서 고려한 세가지 케이스이고 각각의 경우에 대하여 `left_rotation`, `right_rotation`을 테스트 하여 결과 출력하였다. 
+---
 # Red-Black Tree 구현
 
 Balanced search tree로 많이 쓰이는 Red-black tree (이하 RB tree)를 C 언어로 구현해 보는 과제입니다.
@@ -36,3 +98,4 @@ Balanced search tree로 많이 쓰이는 Red-black tree (이하 RB tree)를 C �
 ([영어](https://en.wikipedia.org/wiki/Red%E2%80%93black_tree))
 - CLRS book (Introduction to Algorithms) 13장 레드 블랙 트리
 - [Wikipedia:균형 이진 트리의 구현 방법들](https://en.wikipedia.org/wiki/Self-balancing_binary_search_tree#Implementations)
+
