@@ -62,12 +62,14 @@
 - nil: 리프노드와 루트노드를 표현하기 위한 보조 값
 
 ### 생성/삭제 
+#### 새로운 RED BLACK TREE 생성
 - [x] `rbtree *new_rbtree(void)` 
   - RB트리 생성 
   - rbtree 메모리 할당 
   - rbtree 멤버 초기화 
     - root를 NULL로 만들어주기 
     - nil에 메모리 할당한 후 BLACK으로 설정, 나머지는 NULL
+#### RED BLACK TREE에 사용한 메모리 모두 해제
 - [x] `void delete_rbtree(rbtree *t)` 
   - RB트리 생성에 사용했던 메모리 회수
   - `node_t * _delete(node_t * curr)` 보조 함수를 이용하여 재귀적으로 노드 삭제 
