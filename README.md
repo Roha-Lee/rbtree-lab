@@ -1,5 +1,6 @@
 # Red Black Tree 개발 노트 :book:
 :link:[과제 설명으로 바로가기](#red-black-tree-구현)
+
 ![RB tree](https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Red-black_tree_example.svg/500px-Red-black_tree_example.svg.png)
 
 ## Red Black tree 개요
