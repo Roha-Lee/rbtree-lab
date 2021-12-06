@@ -74,6 +74,7 @@
     - 리프노드부터 순차적으로 삭제(왼쪽 오른쪽 자식이 모두 `Tree.nil`인 경우 노드 반환)
     - 재귀적으로 다음 노드를 호출하면서 `free(_delete(curr->left));`, `free(_delete(curr->right));`와 같이 다음 갈 곳이 있는 노드를 방문하여 먼저 삭제 하고 이후에 반환된 노드를 해제한다. 
 ### 코어 기능 
+#### 키 값을 갖는 새로운 노드 삽입 
 - [x] `node_t *rbtree_insert(rbtree *t, const key_t key)`
   - insert를 구현하기 위해 아래와 같은 3가지 보조함수 `_right_rotation`, `_left_rotation`, `_rb_insert_fixup`을 구현하였다. 
   - 이진 탐색 트리와 동일한 로직으로 key값을 노드와 비교하면서 삽입될 위치를 찾는다. 
@@ -91,9 +92,33 @@
   - [x] `void _rb_insert_fixup(rbtree *t, node_t *curr)`
     - 삽입할 노드를 무조건 빨강으로 만들어서 넣어주기 때문에 RB 트리의 규칙을 깰 수 있는 가능성이 있다. 이를 바로잡아주기 위한 보조 함수 
     - [CLRS를 참고한 구현 방식 링크](#insertion-fixup)
-    
+#### 특정 키값을 갖는 노드 찾기 
+- [x] `node_t *rbtree_find(const rbtree *t, const key_t key)`
+  - 빈 트리인 경우 `NULL`을 반환
+  - 쿼리의 키값과 현재 노드의 키값을 비교하여 쿼리의 키값이 큰 경우 우측 자식으로 이동, 작은 경우 좌측 자식으로 이동하면서 같은 값이 나올때까지 이동한다. 
+  - 도중에 같은 값이 나오면 그 노드를 반환하고 값을 찾지 못하고 `tree->nil`을 만나면 `NULL(tree->nil)`을 반환한다. 
+#### rbtree의 최대값 찾기 
+- [x] `node_t *rbtree_max(const rbtree *t)`
+  - 빈 트리인 경우 `NULL`을 반환
+    - `tree->nil`이 더 적절하지 않을까:question:
+  - 빈 트리가 아닌경우 `tree->root`부터 시작하여 가장 오른쪽에 있는 노드를 반환한다.  
+#### rbtree의 최소값 찾기 
+- [x] `node_t *rbtree_min(const rbtree *t)`
+  - 빈 트리인 경우 `NULL`을 반환
+    - `tree->nil`이 더 적절하지 않을까:question:
+  - 빈 트리가 아닌경우 `tree->root`부터 시작하여 가장 왼쪽에 있는 노드를 반환한다.  
+#### rbtree를 array로 변환하기 
+- [x] `int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n)`
+  - RB tree의 내용을 key 순서대로 주어진 arr로 변환하기
+  - key 순서대로 얻기 위해서는 rbtree를 중위순회하여 순서대로 값을 넣으면 된다. 
+  - 인자로 주어진 n이 tree의 노드 수보다 큰 경우는 없다고 가정한다. 
+    - n이 tree의 노드 수 보다 큰 경우에는 `min(n, number_of_tree_node)`로 동적 할당을 하게 만들면 좋을 것 같다. :bulb:
+  - 먼저 트리가 비어있는 경우는 아무것도 하지 않고 함수를 종료한다. 
+  - 트리가 비어있지 않은 경우는 다음과 같이 수행한다. 
+    - 현재 배열로 들어간 노드 수를 카운트 하는 변수를 만들고 이를 포인터로 전달하여 값을 계속 바꾸면서 n보다 작은 동안에만 중위 순회하며 배열에 넣어주고 아닌 경우는 바로 return하여 중위 순회를 종료시킨다. 
+  
 ## 테스트 
-- [x] 트리 회전 테스트 통과
+- [x] (자체제작) 트리 회전 테스트 통과
   - 회전관련한 테스트 케이스는 주어지지 않아서 따로 구현하였다. 
   - `test_rotate.c`파일에 테스트 케이스와 트리 출력 코드를 작성한 후 회전을 제대로 구현했는지 테스트 
   - 확인한 케이스는 위의 회전 구현에서 고려한 세가지 케이스이고 각각의 경우에 대하여 `left_rotation`, `right_rotation`을 테스트 하여 결과 출력하였다. 
@@ -101,9 +126,10 @@
   - `test-rbtree.c`파일의 `test_init`부분 통과 
 - [x] 원소 1개 삽입하는 테스트 통과 
   - `test-rbtree.c`파일의 `test_insert_single`부분 통과 
+- [x] (자체제작) insert test 통과
+  - `test_rbtree_insert.c`파일에서 3가지 테스트 케이스에 대하여 결과가 일치하는지 확인하였다. 
 
 # Red-Black Tree 구현
-
 Balanced search tree로 많이 쓰이는 Red-black tree (이하 RB tree)를 C 언어로 구현해 보는 과제입니다.
 구현하는 추상 자료형(abstract data type)은 ordered set, multiset 입니다.
 
