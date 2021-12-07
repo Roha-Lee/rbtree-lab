@@ -205,6 +205,24 @@ node_t *rbtree_max(const rbtree *t) {
     return curr;
 }
 
+
+void _transplant(rbtree *t, node_t *u, node_t *v){
+    if (u->parent == t->nil) {
+        t->root = v;
+    }
+    else if (u == u->parent->left) {
+        u->parent->left = v;
+    }
+    else {
+        u->parent->right = v;
+    }
+    v->parent = u->parent;
+}
+
+
+void _delete_fixup(){
+    
+}
 int rbtree_erase(rbtree *t, node_t *p) {
     // TODO: implement erase
     return 0;

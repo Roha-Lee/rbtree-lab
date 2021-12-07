@@ -175,7 +175,8 @@
   - 특정 노드를 삭제를 구현하기 위해서 `_transplant`, `_delete_fixup`를 추가로 구현하였다. 
   - Deletion과 transplant와 fixup의 경우 위의 구현 하기 전 공부한 내용과 동일하기 때문에 링크로 대체한다. 
   :link:[링크](#deletion)
-  - [ ] `_transplant`  
+  - [x] `void _transplant(rbtree *t, node_t *u, node_t *v)`  
+    - (u를 제거하기 전에) u의 부모와 v를 연결해 주기 위한 함수 구현 완료 
   - [ ] `_delete_fixup`
 ## 테스트 
 - [x] (자체제작) 트리 회전 테스트 통과
