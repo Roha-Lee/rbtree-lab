@@ -46,16 +46,18 @@
 - 6가지 경우로 나누어서 구현한다. 
   - 3가지 경우는 `new_node->parent`가 `new_node->parent->parent`의 왼쪽노드인 경우, 나머지 3가지 경우는 `new_node->parent`가 `new_node->parent->parent`의 오른쪽 노드인 경우이다.
   - 경우 1) `new_node`의 삼촌(부모의 부모의 다른 자식)이 빨강인 경우
+  ![경우 1](https://user-images.githubusercontent.com/82917798/145071973-84ed1c67-50ee-4523-b52a-d3358ce88091.jpeg)
     - 해법) 
     - `new_node->parent`와 그 삼촌을 검정으로 칠한다. 
     - `new_node->parent->parent`를 빨강으로 칠한다. 
     - `new_node = new_node->parent->parent` 로 두고 다음 반복을 수행한다.
   - 경우 2) `new_node`의 삼촌 `y`가 검정이고 `new_node`가 부모의 오른쪽 자식인 경우 
   - 경우 3) `new_node`의 삼촌 `y`가 검정이고 `new_node`가 부모의 왼쪽 자식인 경우 
+  ![경우 2 & 3](https://user-images.githubusercontent.com/82917798/145072076-a243ad70-6102-4b44-8b96-728451981828.jpeg)
     - 해법) 
     - 경우 2에서 `new_node = new_node->parent;`를 한 후 `left_rotate(t, new_node);`를 하면 경우 3으로 변환이 가능하다. 
     - 경우 3의 경우 `new_node->parent`를 검정으로, `new_node->parent->parent`를 빨강으로 칠한 다음 `right_rotate(t, new_node->parent->parent);`를 수행하면 된다.
-    - TODO) 그림 있으면 좋을거 같다. 
+    
 
 ### Transplant
 - `Transplant(T, u, v)`는 `u->parent`의 자식노드를 `u`대신 `v`로 바꾸어 주는 기능을 수행한다. 
@@ -88,16 +90,20 @@
 - **:bulb: 항상 루프의 시작위치에서 x는 검정을 2개 들고 있다.** 
   - 크게는 `x`가 왼쪽 자식인 경우와 오른쪽 자식인 경우로 나누어서 각각의 경우에 대하여 4가지 경우가 존재한다. 한 경우는 다른 경우에 대하여 대칭이므로 한쪽 경우에 대해서만 생각해보자. 
   - 경우 1) `x`의 형제 `w`가 빨강인 경우 
+  ![경우1](https://user-images.githubusercontent.com/82917798/145069741-6e0497f2-5d18-4acc-87a9-631c8b91a4ea.jpeg)
     - 해법) 경우 1은 변환을 통해 경우 2~4로 바꾸어 줄 수 있다. 
     - `x->parent`와 `w`의 색을 바꾸고 `left_rotation(T, x->parent)`을 수행하면 RB트리의 특성은 바뀌지 않은 채로 트리의 모양이 바뀐다. 바뀐 트리는 경우 2~4에 해당한다. 
   - 경우 2) `x`의 형제 `w`가 검정이고 `w`의 두 자식이 모두 흑색인 경우 
+  ![경우 2](https://user-images.githubusercontent.com/82917798/145069953-27d8618a-f800-4229-ac3c-4ea5407124bd.jpeg)
     - `x`는 검정 2개를 들고 있고 `w`는 검정 1개를 들고 있다. `x`와 `w`가 부모에게 검정을 1개씩 전달하여도 RB트리의 특성이 바뀌지 않는다. 
     - 부모가 빨강이었던 경우는 자식들에게 검정을 받아서 검정으로 바꾸고 함수를 종료한다. 
     - 부모가 검정이었던 경우는 2개의 검정을 들고 다음 루프를 실행하기 위해 `x = x->parent`로 바꾸고 다음 루프를 실행한다. 
   - 경우 3) `x`의 형제 `w`가 검정이고 `w`의 왼쪽 자식은 빨강, 오른쪽 자식은 검정인 경우 
+  ![경우 3](https://user-images.githubusercontent.com/82917798/145070231-cf232155-30f3-4c79-ab0d-07cdc639e9be.jpeg)
     - 경우 1과 비슷하게 RB특성을 유지한채로 회전과 색 변경을 통해 트리의 모양을 바꿔준다. 바꾸고 나면 경우 4가 된다. 
     - `w`와 `w->left`의 색을 바꾸고 `right_rotation(T, w)`을 수행하면 RB 트리의 특성을 유지한채로 경우 4로 모양을 바꿀 수 있다. 
   - 경우 4) `x`의 형제 `w`는 검정이고 `w`의 오른쪽 자식은 빨강인 경우 
+  ![경우 4](https://user-images.githubusercontent.com/82917798/145070465-4642b98b-01fe-4f9a-88db-a0995d429749.jpeg)
     - 노드색 변경과 회전을 통해 RB트리 특성 위반 없이 트리를 변형할 수 있다. 
     - 변형하게 되면 x에서 여분의 검정을 제거할 수 있다. 
       - `w->color = x->parent->color`
@@ -192,6 +198,31 @@
     - (u를 제거하기 전에) u의 부모와 v를 연결해 주기 위한 함수 구현 완료 
   - [x] `void _delete_fixup(rbtree * t, node_t *x)`
     - [앞서 살펴본](#deletion-fixup) 8가지 케이스를 고려하여 RB 트리의 특성을 원상복구 시켜주는 함수 구현 완료. 
+- 구현하며 알게 된 점
+  - 아래 코드에서 `y->parent == p`일때 `x->parent = y`를 하는 부분이 CLRS의 의사코드에 적혀있었는데 이 부분이 잘 이해되지 않았는데, 구현하면서 이 부분이 왜 필요한지 알게 되었다. 
+  - 아래 그림에서 2번 노드를 지우는 경우 직후 원소는 3이고 fixup함수에 x가 들어가게 된다. 일반적인 경우 x의 부모를 y로 만들어주지 않아도 알아서 부모-자식 관계가 성립이 되지만 nil인 경우에는 설정을 해줘야 한다. 따라서 이 부분의 코드가 필요했다. 
+  ![내가 그린 그림1](https://user-images.githubusercontent.com/82917798/145068730-5b17b058-3473-4315-bcc6-aa0ce6ec6389.png)
+```c
+else {
+    y = p->right;
+    while(y->left != t->nil){
+        y = y->left;
+    }
+    y_original = y->color;
+    x = y->right;
+    if(y->parent == p) {
+        x->parent = y;
+    }
+    else {
+        y->right = p->left;
+        y->right->parent = y;
+    }
+    _transplant(t, p, y);
+    y->left = p->left;
+    y->left->parent = y;
+    y->color = p->color;
+}
+```
 
 ## 테스트 
 - [x] (자체제작) 트리 회전 테스트 통과
@@ -204,6 +235,7 @@
   - `test-rbtree.c`파일의 `test_insert_single`부분 통과 
 - [x] (자체제작) insert test 통과
   - `test_rbtree_insert.c`파일에서 3가지 테스트 케이스에 대하여 결과가 일치하는지 확인하였다. 
+- [x] `test-rbtree.c` 테스트 전부 통과
 
 # Red-Black Tree 구현
 Balanced search tree로 많이 쓰이는 Red-black tree (이하 RB tree)를 C 언어로 구현해 보는 과제입니다.

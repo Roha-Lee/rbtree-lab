@@ -299,7 +299,10 @@ int rbtree_erase(rbtree *t, node_t *p) {
         }
         y_original = y->color;
         x = y->right;
-        if(y->parent != p){
+        if(y->parent == p) {
+            x->parent = y;
+        }
+        else {
             y->right = p->left;
             y->right->parent = y;
         }
@@ -323,7 +326,8 @@ void _rbtree_to_array(const rbtree *t, node_t * curr, key_t *arr, size_t *pcnt, 
     _rbtree_to_array(t, curr->left, arr, pcnt, n);
     if(*pcnt < n){
         arr[(*pcnt)++] = curr->key;
-    }else{
+    }
+    else{
         return;
     }
     _rbtree_to_array(t, curr->right, arr, pcnt, n);

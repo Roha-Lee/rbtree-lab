@@ -62,7 +62,13 @@ void rbtree_insert_test(){
     rbtree_insert(rbt2, 6);  
     rbtree_insert(rbt2, 7);
     rbtree_insert(rbt2, 8);
+    rbtree_erase(rbt2, rbtree_find(rbt2, 7));
     rbtree_print(rbt2);
+    // rbtree_erase(rbt2, rbtree_find(rbt2, 8));
+    // rbtree_print(rbt2);
+    // rbtree_erase(rbt2, rbtree_find(rbt2, 2));
+    // rbtree_print(rbt2);
+    
     delete_rbtree(rbt2);
 
     rbtree* rbt3 = new_rbtree();
@@ -75,6 +81,9 @@ void rbtree_insert_test(){
     rbtree_insert(rbt3, 3);  
     rbtree_insert(rbt3, 2);
     rbtree_insert(rbt3, 1);
+    rbtree_erase(rbt3, rbtree_find(rbt3, 7));
+    rbtree_erase(rbt3, rbtree_find(rbt3, 1));
+    rbtree_erase(rbt3, rbtree_find(rbt3, 5));
     rbtree_print(rbt3);
     delete_rbtree(rbt3);
 }
