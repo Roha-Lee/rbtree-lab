@@ -201,7 +201,8 @@
 - 구현하며 알게 된 점
   - 아래 코드에서 `y->parent == p`일때 `x->parent = y`를 하는 부분이 CLRS의 의사코드에 적혀있었는데 이 부분이 잘 이해되지 않았는데, 구현하면서 이 부분이 왜 필요한지 알게 되었다. 
   - 아래 그림에서 2번 노드를 지우는 경우 직후 원소는 3이고 fixup함수에 x가 들어가게 된다. 일반적인 경우 x의 부모를 y로 만들어주지 않아도 알아서 부모-자식 관계가 성립이 되지만 nil인 경우에는 설정을 해줘야 한다. 따라서 이 부분의 코드가 필요했다. 
-  ![내가 그린 그림1](https://user-images.githubusercontent.com/82917798/145068730-5b17b058-3473-4315-bcc6-aa0ce6ec6389.png)
+  <img src="https://user-images.githubusercontent.com/82917798/145068730-5b17b058-3473-4315-bcc6-aa0ce6ec6389.png" alt="내가 그린 그림1" width="300px"/>
+  
 ```c
 else {
     y = p->right;
