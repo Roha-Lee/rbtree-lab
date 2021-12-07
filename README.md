@@ -22,16 +22,20 @@
 ## Red Black tree 시간 복잡도 
 - 삽입: O(logN)
 - 삭제: O(logN)
+
 ## 구현 하기 전 공부 
 ### 개요 
 - `T.nil`은 리프노드를 내부 노드와 동일하게 다루기 위해 사용 
   - **트리 안에서만 사용해야 한다**
 - `black height(x)`란 한 노드 x에서 리프까지의 경로에 있는 모든 흑색 노드의 개수
+
 ### rotation
 - insert와 delete를 위해 rotation을 사용하며 rotation은 이진 탐색트리의 특성을 보존하는 연산이다. 
+
 ### insertion 
 - 삽입할 노드는 이진 탐색 트리와 유사하게 위치를 찾아 빨강으로 칠한후 삽입한다. 
 - 삽입한 후에 RB tree에 위배된 부분이 있다면 RB_INSERT_FIXUP을 호출해서 RB tree의 특성을 맞춰준다. 
+
 ### insertion fixup
 - 반복문을 통해 위로 올라가면서 RB tree에 위배된 부분을 수정해 나간다. 
 - while 반복 시작 시 유지되는 것
@@ -52,9 +56,11 @@
     - 경우 2에서 `new_node = new_node->parent;`를 한 후 `left_rotate(t, new_node);`를 하면 경우 3으로 변환이 가능하다. 
     - 경우 3의 경우 `new_node->parent`를 검정으로, `new_node->parent->parent`를 빨강으로 칠한 다음 `right_rotate(t, new_node->parent->parent);`를 수행하면 된다.
     - TODO) 그림 있으면 좋을거 같다. 
+
 ### Transplant
 - `Transplant(T, u, v)`는 `u->parent`의 자식노드를 `u`대신 `v`로 바꾸어 주는 기능을 수행한다. 
 - 이 때, `u`는 삭제되는 것이 아니라 `u->parent`로부터 접근이 불가능하게 된 것 뿐이다. 
+
 ### Deletion
 - 옮기거나 삭제되는 노드의 원래 색을 기억해 두었다가 **검정**인 경우만 deletion fixup을 통해 트리를 고쳐준다. 
   - 빨강인 경우는 옮겨도 RB 트리의 특성을 위반하지 않기 때문에 트리를 고칠 필요가 없다. 
@@ -119,12 +125,14 @@
   - rbtree 멤버 초기화 
     - root를 NULL로 만들어주기 
     - nil에 메모리 할당한 후 BLACK으로 설정, 나머지는 NULL
+
 #### RED BLACK TREE에 사용한 메모리 모두 해제
 - [x] `void delete_rbtree(rbtree *t)` 
   - RB트리 생성에 사용했던 메모리 회수
   - `node_t * _delete(node_t * curr)` 보조 함수를 이용하여 재귀적으로 노드 삭제 
     - 리프노드부터 순차적으로 삭제(왼쪽 오른쪽 자식이 모두 `Tree.nil`인 경우 노드 반환)
     - 재귀적으로 다음 노드를 호출하면서 `free(_delete(curr->left));`, `free(_delete(curr->right));`와 같이 다음 갈 곳이 있는 노드를 방문하여 먼저 삭제 하고 이후에 반환된 노드를 해제한다. 
+
 ### 코어 기능 
 #### 키 값을 갖는 새로운 노드 삽입 
 - [x] `node_t *rbtree_insert(rbtree *t, const key_t key)`
@@ -144,11 +152,13 @@
   - [x] `void _rb_insert_fixup(rbtree *t, node_t *curr)`
     - 삽입할 노드를 무조건 빨강으로 만들어서 넣어주기 때문에 RB 트리의 규칙을 깰 수 있는 가능성이 있다. 이를 바로잡아주기 위한 보조 함수 
     - [CLRS를 참고한 구현 방식 링크](#insertion-fixup)
+
 #### 특정 키값을 갖는 노드 찾기 
 - [x] `node_t *rbtree_find(const rbtree *t, const key_t key)`
   - 빈 트리인 경우 `NULL`을 반환
   - 쿼리의 키값과 현재 노드의 키값을 비교하여 쿼리의 키값이 큰 경우 우측 자식으로 이동, 작은 경우 좌측 자식으로 이동하면서 같은 값이 나올때까지 이동한다. 
   - 도중에 같은 값이 나오면 그 노드를 반환하고 값을 찾지 못하고 `tree->nil`을 만나면 `NULL(tree->nil)`을 반환한다. 
+
 #### rbtree의 최대값 찾기 
 - [x] `node_t *rbtree_max(const rbtree *t)`
   - 빈 트리인 경우 `NULL`을 반환
@@ -156,10 +166,12 @@
       - **질문에 대한 답변:bulb:**
         - tree->nil의 경우 구현의 편의를 위해 트리 내부에서 사용하는 것으로 인터페이스에는 등장하면 안된다. 따라서 NULL을 반환하는 것이 맞다. 
   - 빈 트리가 아닌경우 `tree->root`부터 시작하여 가장 오른쪽에 있는 노드를 반환한다.  
+
 #### rbtree의 최소값 찾기 
 - [x] `node_t *rbtree_min(const rbtree *t)`
   - 빈 트리인 경우 `NULL`을 반환
   - 빈 트리가 아닌경우 `tree->root`부터 시작하여 가장 왼쪽에 있는 노드를 반환한다.  
+
 #### rbtree를 array로 변환하기 
 - [x] `int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n)`
   - RB tree의 내용을 key 순서대로 주어진 arr로 변환하기
@@ -169,15 +181,18 @@
   - 먼저 트리가 비어있는 경우는 아무것도 하지 않고 함수를 종료한다. 
   - 트리가 비어있지 않은 경우는 다음과 같이 수행한다. 
     - 현재 배열로 들어간 노드 수를 카운트 하는 변수를 만들고 이를 포인터로 전달하여 값을 계속 바꾸면서 n보다 작은 동안에만 중위 순회하며 배열에 넣어주고 아닌 경우는 바로 return하여 중위 순회를 종료시킨다. 
+
 #### 노드 삭제하기 
-- [ ] `int rbtree_erase(rbtree *t, node_t *p)`
+- [x] `int rbtree_erase(rbtree *t, node_t *p)`
   - 특정 노드를 삭제하는 함수이다. 
   - 특정 노드를 삭제를 구현하기 위해서 `_transplant`, `_delete_fixup`를 추가로 구현하였다. 
   - Deletion과 transplant와 fixup의 경우 위의 구현 하기 전 공부한 내용과 동일하기 때문에 링크로 대체한다. 
   :link:[링크](#deletion)
   - [x] `void _transplant(rbtree *t, node_t *u, node_t *v)`  
     - (u를 제거하기 전에) u의 부모와 v를 연결해 주기 위한 함수 구현 완료 
-  - [ ] `_delete_fixup`
+  - [x] `void _delete_fixup(rbtree * t, node_t *x)`
+    - [앞서 살펴본](#deletion-fixup) 8가지 케이스를 고려하여 RB 트리의 특성을 원상복구 시켜주는 함수 구현 완료. 
+
 ## 테스트 
 - [x] (자체제작) 트리 회전 테스트 통과
   - 회전관련한 테스트 케이스는 주어지지 않아서 따로 구현하였다. 
