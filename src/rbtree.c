@@ -281,6 +281,9 @@ void _delete_fixup(rbtree * t, node_t *x){
 
 int rbtree_erase(rbtree *t, node_t *p) {
     // TODO: implement erase
+    if (p == NULL) {
+        return 0;
+    }
     node_t * y = p;
     node_t * x;
     color_t y_original = y->color;
@@ -303,7 +306,8 @@ int rbtree_erase(rbtree *t, node_t *p) {
             x->parent = y;
         }
         else {
-            y->right = p->left;
+            _transplant(t, y, y->right);
+            y->right = p->right;
             y->right->parent = y;
         }
         _transplant(t, p, y);
