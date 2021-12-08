@@ -1,7 +1,7 @@
 # Red Black Tree 개발 노트 :book:
 :link:[과제 설명으로 바로가기](#red-black-tree-구현)
 
-![RB tree](https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Red-black_tree_example.svg/500px-Red-black_tree_example.svg.png)
+![RB tree](https://www.codesdope.com/staticroot/images/ds/rb6.png)
 
 ## Red Black tree 개요
 - 이진 검색트리의 일종
@@ -46,14 +46,15 @@
 - 6가지 경우로 나누어서 구현한다. 
   - 3가지 경우는 `new_node->parent`가 `new_node->parent->parent`의 왼쪽노드인 경우, 나머지 3가지 경우는 `new_node->parent`가 `new_node->parent->parent`의 오른쪽 노드인 경우이다.
   - 경우 1) `new_node`의 삼촌(부모의 부모의 다른 자식)이 빨강인 경우
-  ![경우 1](https://user-images.githubusercontent.com/82917798/145071973-84ed1c67-50ee-4523-b52a-d3358ce88091.jpeg)
+  ![경우 1](https://user-images.githubusercontent.com/82917798/145158174-7b0b5a55-987d-4b4b-9061-a6b1c6c574eb.jpeg)
     - 해법) 
     - `new_node->parent`와 그 삼촌을 검정으로 칠한다. 
     - `new_node->parent->parent`를 빨강으로 칠한다. 
     - `new_node = new_node->parent->parent` 로 두고 다음 반복을 수행한다.
-  - 경우 2) `new_node`의 삼촌 `y`가 검정이고 `new_node`가 부모의 오른쪽 자식인 경우 
+  - 경우 2) `new_node`의 삼촌 `y`가 검정이고 `new_node`가 부모의 오른쪽 자식인 경우
+  ![경우 2](https://user-images.githubusercontent.com/82917798/145158338-d41cc2e2-6c28-4c1f-99bc-a49f66b36bb4.jpeg) 
   - 경우 3) `new_node`의 삼촌 `y`가 검정이고 `new_node`가 부모의 왼쪽 자식인 경우 
-  ![경우 2 & 3](https://user-images.githubusercontent.com/82917798/145072076-a243ad70-6102-4b44-8b96-728451981828.jpeg)
+  ![경우 3](https://user-images.githubusercontent.com/82917798/145158424-a8289c66-e08f-4217-b367-e62dce6d1679.jpeg) 
     - 해법) 
     - 경우 2에서 `new_node = new_node->parent;`를 한 후 `left_rotate(t, new_node);`를 하면 경우 3으로 변환이 가능하다. 
     - 경우 3의 경우 `new_node->parent`를 검정으로, `new_node->parent->parent`를 빨강으로 칠한 다음 `right_rotate(t, new_node->parent->parent);`를 수행하면 된다.
