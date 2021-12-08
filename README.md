@@ -216,7 +216,8 @@ else {
         x->parent = y;
     }
     else {
-        y->right = p->left;
+        _transplant(t, y, y->right);
+        y->right = p->right;
         y->right->parent = y;
     }
     _transplant(t, p, y);
